@@ -10,6 +10,7 @@ import 'package:ecom_firebase_07/pages/report_page.dart';
 import 'package:ecom_firebase_07/pages/settings_page.dart';
 import 'package:ecom_firebase_07/pages/user_list_page.dart';
 import 'package:ecom_firebase_07/pages/view_product_page.dart';
+import 'package:ecom_firebase_07/providers/order_provider.dart';
 import 'package:ecom_firebase_07/providers/product_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,8 @@ void main()  async{
   await Firebase.initializeApp();
   runApp(
     MultiProvider(providers:[
-      ChangeNotifierProvider(create: (_)=>ProductProvider())
+      ChangeNotifierProvider(create: (context)=>ProductProvider()),
+      ChangeNotifierProvider(create: (context)=>OrderProvider()),
     ],
       child: const MyApp() ,
     )
