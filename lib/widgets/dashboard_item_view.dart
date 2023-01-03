@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 
 class DashboardItemView extends StatelessWidget {
   final DashboardModel dashboardModel;
-const DashboardItemView({Key? key, required this.dashboardModel}) : super(key: key);
+  Widget? bubble;
+DashboardItemView({Key? key, required this.dashboardModel,this.bubble}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +19,17 @@ const DashboardItemView({Key? key, required this.dashboardModel}) : super(key: k
           child:Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(dashboardModel.iconData,size:40,color:Theme.of(context).primaryColor,),
+              Stack(
+                children: [
+                  Icon(dashboardModel.iconData,size:50,color:Theme.of(context).primaryColor,),
+                  if(bubble!=null) Positioned(
+                    bottom: 10,
+                      right: 5,
+                      child: bubble!)
+                ],
+              ),
               const SizedBox(height:10 ,),
-              Text(dashboardModel.title,style:Theme.of(context).textTheme.headline6,)
+              Text(dashboardModel.title,style:Theme.of(context).textTheme.headline6,),
             ],
           ),
         ),

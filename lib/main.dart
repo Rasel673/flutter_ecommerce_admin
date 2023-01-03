@@ -1,8 +1,11 @@
+
 import 'package:ecom_firebase_07/pages/add_product_page.dart';
 import 'package:ecom_firebase_07/pages/category_page.dart';
 import 'package:ecom_firebase_07/pages/dashboard.dart';
 import 'package:ecom_firebase_07/pages/launcher.dart';
 import 'package:ecom_firebase_07/pages/login.dart';
+import 'package:ecom_firebase_07/pages/notification_page.dart';
+import 'package:ecom_firebase_07/pages/order_details.dart';
 import 'package:ecom_firebase_07/pages/order_page.dart';
 import 'package:ecom_firebase_07/pages/product_details.dart';
 import 'package:ecom_firebase_07/pages/product_repurchase_page.dart';
@@ -10,6 +13,7 @@ import 'package:ecom_firebase_07/pages/report_page.dart';
 import 'package:ecom_firebase_07/pages/settings_page.dart';
 import 'package:ecom_firebase_07/pages/user_list_page.dart';
 import 'package:ecom_firebase_07/pages/view_product_page.dart';
+import 'package:ecom_firebase_07/providers/notification_provider.dart';
 import 'package:ecom_firebase_07/providers/order_provider.dart';
 import 'package:ecom_firebase_07/providers/product_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -22,10 +26,12 @@ void main()  async{
   await Firebase.initializeApp();
   runApp(
     MultiProvider(providers:[
-      ChangeNotifierProvider(create: (context)=>ProductProvider()),
-      ChangeNotifierProvider(create: (context)=>OrderProvider()),
+      ChangeNotifierProvider(create: (_)=>ProductProvider()),
+      ChangeNotifierProvider(create: (_)=>OrderProvider()),
+      ChangeNotifierProvider(create: (_)=>NotificationProvider()),
     ],
-      child: const MyApp() ,
+
+      child:const MyApp(),
     )
      
   
@@ -53,6 +59,7 @@ class MyApp extends StatelessWidget {
        AddProductPage.routeName:(_)=>AddProductPage(),
        CategoryPage.routeName:(_)=>CategoryPage(),
        OrderPage.routeName:(_)=>OrderPage(),
+       OrderDetails.routeName:(_)=>OrderDetails(),
        ReportPage.routeName:(_)=>ReportPage(),
        SettingsPage.routeName:(_)=>SettingsPage(),
        UserListPage.routeName:(_)=>UserListPage(),
@@ -60,6 +67,7 @@ class MyApp extends StatelessWidget {
        LoginPage.routeName:(_)=>LoginPage(),
        ProductDetails.routeName:(_)=>ProductDetails(),
        ProductRepurchase.routeName:(_)=>ProductRepurchase(),
+       NotificationPage.routeName:(_)=>NotificationPage(),
      },
     );
   }

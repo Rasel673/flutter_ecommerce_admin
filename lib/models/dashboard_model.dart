@@ -1,5 +1,6 @@
 
 
+import 'package:ecom_firebase_07/pages/notification_page.dart';
 import 'package:flutter/material.dart';
 import 'package:ecom_firebase_07/pages/add_product_page.dart';
 import 'package:ecom_firebase_07/pages/category_page.dart';
@@ -28,5 +29,6 @@ const List<DashboardModel>dashboardModelList = [
   DashboardModel(title: 'Orders', iconData: Icons.monetization_on, routeName: OrderPage.routeName),
   DashboardModel(title: 'Users', iconData: Icons.person, routeName: UserListPage.routeName),
   DashboardModel(title: 'Settings', iconData: Icons.settings, routeName: SettingsPage.routeName),
-  DashboardModel(title: 'Report', iconData: Icons.pie_chart, routeName: ReportPage.routeName)
+  DashboardModel(title: 'Report', iconData: Icons.pie_chart, routeName: ReportPage.routeName),
+  DashboardModel(title: 'Notification', iconData: Icons.notifications_active, routeName: NotificationPage.routeName),
 ];

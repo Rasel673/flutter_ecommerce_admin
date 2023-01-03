@@ -2,7 +2,9 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecom_firebase_07/models/category_model.dart';
+import 'package:ecom_firebase_07/models/notification_model.dart';
 import 'package:ecom_firebase_07/models/order_constant_model.dart';
+import 'package:ecom_firebase_07/models/order_model.dart';
 import 'package:ecom_firebase_07/models/product_model.dart';
 import 'package:ecom_firebase_07/models/purchase_model.dart';
 
@@ -15,11 +17,19 @@ class DbHelper {
     return snapshot.exists;
   }
 
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllCategories() =>
+      _db.collection(collectionCategory).snapshots();
   static Future<void> addCategory(CategoryModel categoryModel) {
     final catDoc = _db.collection(collectionCategory).doc();
     categoryModel.categoryId = catDoc.id;
     return catDoc.set(categoryModel.toMap());
   }
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllProductsByCategory(String categoryName) =>
+      _db.collection(collectionProduct)
+          .where('$productFieldCategory.$categoryFieldName', isEqualTo: categoryName)
+          .snapshots();
 
   static Future<void> addNewProduct(ProductModel productModel, PurchaseModel purchaseModel){
     final productDoc=_db.collection(collectionProduct).doc();
@@ -40,9 +50,6 @@ class DbHelper {
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllProducts() =>
       _db.collection(collectionProduct).snapshots();
 
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllCategories() =>
-      _db.collection(collectionCategory).snapshots();
-
 
   // static Future<QuerySnapshot<Map<String, dynamic>>> getAllPurchasesByProductId(String productId) =>
   //     _db.collection(collectionPurchase)
@@ -52,10 +59,6 @@ class DbHelper {
       _db.collection(collectionPurchase)
           .snapshots();
 
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllProductsByCategory(String categoryName) =>
-      _db.collection(collectionProduct)
-          .where('$productFieldCategory.$categoryFieldName', isEqualTo: categoryName)
-          .snapshots();
 
   static Future<void> productRepurchases(PurchaseModel purchaseModel, ProductModel productModel) async{
       final wb=_db.batch();
@@ -71,15 +74,16 @@ class DbHelper {
       wb.commit();
   }
 
-
-     static Future<void> productFieldUpdate(String productId,Map<String,dynamic> map){
+  static Future<void> productFieldUpdate(String productId,Map<String,dynamic> map){
         return _db.collection(collectionProduct).doc(productId).update(map);
       }
-
 
   static Stream<DocumentSnapshot<Map<String, dynamic>>> getOrderConstants() =>
       _db.collection(collectionUtils).doc(documentOrderConstants).snapshots();
 
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllOrders() =>
+      _db.collection(collectionOrder).snapshots();
 
   static Future<void> updateOrderConstants(OrderConstantModel model) {
     return _db.collection(collectionUtils)
@@ -87,5 +91,18 @@ class DbHelper {
         .update(model.toMap());
   }
 
+  static Future<void> updateOrderStatus(String orderId,String status) {
+    return _db.collection(collectionOrder)
+        .doc(orderId)
+        .update({orderFieldOrderStatus:status});
+  }
+
+
+  static Stream<QuerySnapshot<Map<String,dynamic>>> getAllNotifications()=>
+      _db.collection(collectionNotification).snapshots();
+
+  static Future<void> updateNotificationStatus(String notificationId) {
+   return _db.collection(collectionNotification).doc(notificationId).update({notificationFieldStatus:true});
+  }
 
 }

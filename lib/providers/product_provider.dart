@@ -108,6 +108,11 @@ class ProductProvider extends ChangeNotifier{
     return FirebaseStorage.instance.refFromURL(url).delete();
   }
 
+  ProductModel getSingleProductFromCache(String id) {
+   return productList.firstWhere((element) => element.productId==id);
+
+  }
+
 
 
 }

@@ -23,13 +23,20 @@ class ProductDetails extends StatefulWidget {
 
 class _ProductDetailsState extends State<ProductDetails> {
   late ProductModel productModel;
-
-    late ProductProvider productProvider;
+  late ProductProvider productProvider;
 
     @override
   void didChangeDependencies() {
-      productModel=ModalRoute.of(context)!.settings.arguments as ProductModel;
       productProvider=Provider.of<ProductProvider>(context);
+      final object=ModalRoute.of(context)!.settings.arguments;
+      if(object is String){
+        productModel=productProvider.getSingleProductFromCache(object);
+      }else{
+        productModel=object as ProductModel;
+      }
+
+
+
     super.didChangeDependencies();
   }
   @override
