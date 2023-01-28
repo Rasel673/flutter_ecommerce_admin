@@ -1,6 +1,7 @@
 
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:ecom_firebase_07/models/comment_model.dart';
 import 'package:ecom_firebase_07/models/product_model.dart';
 import 'package:ecom_firebase_07/pages/product_repurchase_page.dart';
 import 'package:ecom_firebase_07/providers/product_provider.dart';
@@ -15,7 +16,7 @@ import '../widgets/photo_Frame_View.dart';
 
 class ProductDetails extends StatefulWidget {
   static const String routeName='/product-details';
-  ProductDetails({Key? key}) : super(key: key);
+  const ProductDetails({Key? key}) : super(key: key);
 
   @override
   State<ProductDetails> createState() => _ProductDetailsState();
@@ -99,11 +100,11 @@ class _ProductDetailsState extends State<ProductDetails> {
               OutlinedButton(
                   onPressed: (){
                     _showPurchases(productModel);
-              }, child:Text('Purchase History')),
-              SizedBox(width:10,),
+              }, child:const Text('Purchase History')),
+              const SizedBox(width:10,),
               OutlinedButton(onPressed: (){
                 Navigator.pushNamed(context, ProductRepurchase.routeName, arguments:productModel);
-              }, child:Text('Repurchase')),
+              }, child:const Text('Repurchase')),
             ],
           ),
           ListTile(
@@ -121,7 +122,7 @@ class _ProductDetailsState extends State<ProductDetails> {
             });
             productProvider.productFieldUpdate(productModel.productId!, productFieldAvailable, productModel.available);
           },
-           title: Text('Available'),
+           title:const  Text('Available'),
           ),
           SwitchListTile(value: productModel.featured, onChanged:(value){
             setState(() {
@@ -129,8 +130,55 @@ class _ProductDetailsState extends State<ProductDetails> {
             });
             productProvider.productFieldUpdate(productModel.productId!, productFieldFeatured, productModel.featured);
           },
-            title: Text('Featured'),
+            title:const Text('Featured'),
           ),
+
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child:Text('All Comments',style:Theme.of(context).textTheme.headline5,),
+          ),
+          FutureBuilder(
+              future: productProvider.getAllCommentsByProductId(productModel.productId!),
+              builder:(context,snapshot){
+                if(snapshot.hasData){
+                  final commentList=snapshot.data!;
+                  if(commentList.isEmpty){
+                    return const Center(child:Text('No Comments Yet'),);
+                  }else{
+                    return Column(
+                      crossAxisAlignment:CrossAxisAlignment.start,
+                      children:commentList.map((comment) =>ListTile(
+                        leading: comment.userModel.userPhotoUrl==null? const Icon(Icons.person):CachedNetworkImage(
+                          height:50,
+                          width:50,
+                          fit: BoxFit.cover,
+                          imageUrl:comment.userModel.userPhotoUrl!,
+                          placeholder: (context, url) =>const Center(child: CircularProgressIndicator()),
+                          errorWidget: (context, url, error) =>const  Icon(Icons.error),
+                        ),
+                        title: Text(comment.userModel.displayName?? comment.userModel.email),
+                        subtitle: Text(comment.comment),
+                        trailing:Column(
+                          children: [
+                            Text(comment.date),
+                            Expanded(
+                              child: OutlinedButton(onPressed: comment.approved?null:(){
+                                EasyLoading.show(status: 'please Wait');
+                                _approveComment(comment);
+                                EasyLoading.dismiss();
+                                showMsg(context, 'Updated');
+                              }, child:const Text('Approved')),
+                            )
+                          ],
+                        ) ,
+                      )).toList(),
+                    );
+                  }
+                }
+                if(snapshot.hasError){
+                }
+                return const Center(child:Text('Loading...'),);
+              })
         ],
       ),
     );
@@ -156,6 +204,17 @@ class _ProductDetailsState extends State<ProductDetails> {
     );
   }
 
+
+
+  void _approveComment(CommentModel commentModel) async {
+    EasyLoading.show(status: 'Please wait');
+    await productProvider.approveComment(productModel.productId!, commentModel);
+    EasyLoading.dismiss();
+    showMsg(context, 'Comment Approved');
+    setState(() {
+
+    });
+  }
 
   void _addImage(int index) async{
 
@@ -196,8 +255,8 @@ class _ProductDetailsState extends State<ProductDetails> {
           height:MediaQuery.of(context).size.height/2,
           fit: BoxFit.cover,
           imageUrl:url,
-          placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-          errorWidget: (context, url, error) => Icon(Icons.error),
+          placeholder: (context, url) =>const  Center(child: CircularProgressIndicator()),
+          errorWidget: (context, url, error) =>const  Icon(Icons.error),
         ),
         actions: [
           TextButton(onPressed:() async{

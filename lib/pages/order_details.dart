@@ -37,10 +37,10 @@ class OrderDetails extends StatelessWidget {
   }
 
   Padding buildHeader(String header) {
-    return Padding(padding: EdgeInsets.all(8.0),
+    return Padding(padding: const EdgeInsets.all(8.0),
       child: Text(
         header,
-        style: TextStyle(fontSize: 18, color: Colors.grey),
+        style: const TextStyle(fontSize: 18, color: Colors.grey),
       ),
     );
   }

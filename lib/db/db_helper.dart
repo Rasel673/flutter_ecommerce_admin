@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecom_firebase_07/models/category_model.dart';
+import 'package:ecom_firebase_07/models/comment_model.dart';
 import 'package:ecom_firebase_07/models/notification_model.dart';
 import 'package:ecom_firebase_07/models/order_constant_model.dart';
 import 'package:ecom_firebase_07/models/order_model.dart';
@@ -103,6 +104,24 @@ class DbHelper {
 
   static Future<void> updateNotificationStatus(String notificationId) {
    return _db.collection(collectionNotification).doc(notificationId).update({notificationFieldStatus:true});
+  }
+
+  static Future<QuerySnapshot<Map<String, dynamic>>> getCommentsByProduct(
+      String proId) =>
+      _db
+          .collection(collectionProduct)
+          .doc(proId)
+          .collection(collectionComment)
+          .get();
+
+
+
+  static Future<void> updateCommentStatus(String productId,CommentModel comment) {
+    return _db.collection(collectionProduct)
+        .doc(productId)
+        .collection(collectionComment)
+        .doc(comment.commentId)
+        .update({commentFieldApproved : true});
   }
 
 }

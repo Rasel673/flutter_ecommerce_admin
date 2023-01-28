@@ -2,6 +2,7 @@
 import 'dart:io';
 
 import 'package:ecom_firebase_07/db/db_helper.dart';
+import 'package:ecom_firebase_07/models/comment_model.dart';
 import 'package:ecom_firebase_07/models/image_model.dart';
 import 'package:ecom_firebase_07/models/product_model.dart';
 import 'package:ecom_firebase_07/models/purchase_model.dart';
@@ -112,6 +113,19 @@ class ProductProvider extends ChangeNotifier{
    return productList.firstWhere((element) => element.productId==id);
 
   }
+
+  Future<void> approveComment(String productId, CommentModel commentModel) {
+    return DbHelper.updateCommentStatus(productId, commentModel);
+  }
+
+
+  Future <List<CommentModel>> getAllCommentsByProductId(String productId) async{
+    final snapshot=await DbHelper.getCommentsByProduct(productId);
+    final commentList = List.generate(snapshot.docs.length, (index) =>
+        CommentModel.fromMap(snapshot.docs[index].data()));
+    return commentList;
+  }
+
 
 
 

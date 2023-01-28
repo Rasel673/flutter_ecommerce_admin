@@ -11,6 +11,7 @@ const String userFieldGender='gender';
 const String userFieldAge='age';
 const String userFieldPhone='phone';
 const String userFieldEmail='email';
+const String userFieldPhotoUrl='userPhotoUrl';
 
 
 class UserModel{
@@ -22,6 +23,7 @@ String? gender;
 String? age;
 String? phone;
 String email;
+String? userPhotoUrl;
 
   UserModel({
         this.userId,
@@ -31,7 +33,8 @@ String email;
         this.gender,
         this.age,
         this.phone,
-        required this.email
+        required this.email,
+        this.userPhotoUrl,
   });
 
   Map<String,dynamic>toMap(){
@@ -44,6 +47,8 @@ String email;
       userFieldAge:age,
       userFieldPhone:phone,
       userFieldEmail:email,
+      userFieldPhotoUrl:userPhotoUrl,
+
     };
   }
   factory UserModel.fromMap(Map<String,dynamic>map)=>UserModel(
@@ -55,5 +60,6 @@ String email;
     age: map[userFieldAge],
     phone: map[userFieldPhone],
     email: map[userFieldEmail],
+    userPhotoUrl: map[userFieldPhotoUrl],
   );
 }
